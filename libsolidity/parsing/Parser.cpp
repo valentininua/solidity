@@ -107,8 +107,11 @@ ASTPointer<SourceUnit> Parser::parse(shared_ptr<Scanner> const& _scanner)
 			case Token::Enum:
 				nodes.push_back(parseEnumDefinition());
 				break;
+			case Token::Function:
+				nodes.push_back(parseFunctionDefinition(true));
+				break;
 			default:
-				fatalParserError(7858_error, "Expected pragma, import directive or contract/interface/library/struct/enum definition.");
+				fatalParserError(7858_error, "Expected pragma, import directive or contract/interface/library/struct/enum/function definition.");
 			}
 		}
 		solAssert(m_recursionDepth == 0, "");
@@ -556,7 +559,7 @@ Parser::FunctionHeaderParserResult Parser::parseFunctionHeader(bool _isStateVari
 	return result;
 }
 
-ASTPointer<ASTNode> Parser::parseFunctionDefinition()
+ASTPointer<ASTNode> Parser::parseFunctionDefinition(bool _freeFunction)
 {
 	RecursionGuard recursionGuard(*this);
 	ASTNodeFactory nodeFactory(*this);
@@ -615,6 +618,7 @@ ASTPointer<ASTNode> Parser::parseFunctionDefinition()
 		name,
 		header.visibility,
 		header.stateMutability,
+		_freeFunction,
 		kind,
 		header.isVirtual,
 		header.overrides,
