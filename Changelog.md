@@ -29,7 +29,7 @@ Language Features:
 
 Compiler Features:
  * Variable declarations using the ``var`` keyword are not recognized anymore.
-
+ * Yul Optimizer: LoopInvariantCodeMotion can move reading operations outside for-loops as long as the affected area is not modified inside the loop.
 
 Bugfixes:
  * Inheritance: Disallow public state variables overwriting ``pure`` functions.
