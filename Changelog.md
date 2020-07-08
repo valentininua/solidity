@@ -26,6 +26,7 @@ Language Features:
 
 Compiler Features:
  * Variable declarations using the ``var`` keyword are not recognized anymore.
+ * New feature to stop compilation after parsing stage.
 
 
 Bugfixes:

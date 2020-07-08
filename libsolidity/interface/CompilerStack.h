@@ -90,7 +90,8 @@ public:
 	enum State {
 		Empty,
 		SourcesSet,
-		ParsingPerformed,
+		Parsed,
+		ParsedAndImported,
 		AnalysisPerformed,
 		CompilationSuccessful
 	};
@@ -213,11 +214,11 @@ public:
 
 	/// Parses and analyzes all source units that were added
 	/// @returns false on error.
-	bool parseAndAnalyze();
+	bool parseAndAnalyze(State _stopAfter = State::CompilationSuccessful);
 
 	/// Compiles the source units that were previously added and parsed.
 	/// @returns false on error.
-	bool compile();
+	bool compile(State _stopAfter = State::CompilationSuccessful);
 
 	/// @returns the list of sources (paths) used
 	std::vector<std::string> sourceNames() const;
@@ -434,6 +435,7 @@ private:
 	ReadCallback::Callback m_readFile;
 	OptimiserSettings m_optimiserSettings;
 	RevertStrings m_revertStrings = RevertStrings::Default;
+	State m_stopAfter = State::CompilationSuccessful;
 	langutil::EVMVersion m_evmVersion;
 	smtutil::SMTSolverChoice m_enabledSMTSolvers;
 	std::map<std::string, std::set<std::string>> m_requestedContractNames;
