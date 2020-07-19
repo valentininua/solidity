@@ -34,7 +34,7 @@ namespace solidity::yul
  *
  * and replace all references to `f` by `f2`.
  *
- * Prerequisites: Disambiguator, FunctionHoister
+ * Prerequisites: Disambiguator, SSATransform, ForLoopConditionIntoBody, ExpressionSplitter, FunctionHoister
  *
  * The inliner should be run afterwards to make sure that all references to `f2` are replaced by
  * `f`.

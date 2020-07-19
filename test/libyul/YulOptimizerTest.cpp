@@ -239,7 +239,12 @@ TestCase::TestResult YulOptimizerTest::run(ostream& _stream, string const& _line
 	else if (m_optimizerStep == "unusedFunctionParameterPruner")
 	{
 		disambiguate();
+		// prerequisite for SSATransform
+		ForLoopInitRewriter::run(*m_context, *m_ast);
+		SSATransform::run(*m_context, *m_ast);
 		FunctionHoister::run(*m_context, *m_ast);
+		ForLoopConditionIntoBody::run(*m_context, *m_ast);
+		ExpressionSplitter::run(*m_context, *m_ast);
 		UnusedFunctionParameterPruner::run(*m_context, *m_ast);
 	}
 	else if (m_optimizerStep == "unusedPruner")
