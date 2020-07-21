@@ -10,12 +10,20 @@
 // step: unusedFunctionParameterPruner
 //
 // {
-//     { let d, e, i := f_1(1, 2, 3) }
-//     function f(a, c) -> x, y, z
 //     {
-//         y := mload(a)
-//         z := mload(c)
+//         let _3 := 3
+//         let _4 := 2
+//         let _5 := 1
+//         let d, e, i := f_6(_5, _4, _3)
 //     }
-//     function f_1(a, b, c) -> x, y, z
-//     { x, y, z := f(a, c) }
+//     function f(a, c)
+//     {
+//         let y, z
+//         let y_1 := mload(a)
+//         y := y_1
+//         let z_2 := mload(c)
+//         z := z_2
+//     }
+//     function f_6(a, b, c) -> x, y, z
+//     { f(a, c) }
 // }

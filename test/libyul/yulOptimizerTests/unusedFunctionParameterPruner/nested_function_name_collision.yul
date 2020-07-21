@@ -24,15 +24,27 @@
 //
 // {
 //     function g() -> w
-//     { w := 13 }
-//     function g_1(d) -> w
+//     {
+//         let w_2 := 13
+//         w := w_2
+//     }
+//     function g_5(d) -> w
 //     { w := g() }
 //     function f(c) -> u
-//     { u := g_1(c) }
+//     {
+//         let u_1 := g_5(c)
+//         u := u_1
+//     }
 //     function g_3() -> w_5
-//     { w_5 := 13 }
-//     function g_3_2(d_4) -> w_5
+//     {
+//         let w_5_4 := 13
+//         w_5 := w_5_4
+//     }
+//     function g_3_6(d_4) -> w_5
 //     { w_5 := g_3() }
 //     function h(c_1) -> u_2
-//     { u_2 := g_3_2(c_1) }
+//     {
+//         let u_2_3 := g_3_6(c_1)
+//         u_2 := u_2_3
+//     }
 // }
