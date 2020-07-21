@@ -36,6 +36,7 @@ add_executable(isoltest
 	../libyul/EwasmTranslationTest.cpp
 	../libyul/FunctionSideEffects.cpp
 	../libyul/ObjectCompilerTest.cpp
+	../libyul/ObjectSyntaxTest.cpp
 	../libyul/SyntaxTest.cpp
 	../libyul/YulOptimizerTest.cpp
 	../libyul/YulInterpreterTest.cpp

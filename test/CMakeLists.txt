@@ -130,6 +130,8 @@ set(libyul_sources
     libyul/ObjectCompilerTest.cpp
     libyul/ObjectCompilerTest.h
     libyul/ObjectParser.cpp
+    libyul/ObjectSyntaxTest.h
+    libyul/ObjectSyntaxTest.cpp
     libyul/Parser.cpp
     libyul/StackReuseCodegen.cpp
     libyul/SyntaxTest.h
