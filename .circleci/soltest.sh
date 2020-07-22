@@ -47,15 +47,28 @@ mkdir -p test_results
 ulimit -s 16384
 
 get_logfile_basename() {
-    local filename="${EVM}"
-    test "${OPTIMIZE}" = "1" && filename="${filename}_opt"
-    test "${ABI_ENCODER_V2}" = "1" && filename="${filename}_abiv2"
+  local filename="${EVM}"
+  test "${OPTIMIZE}" = "1" && filename="${filename}_opt"
+  test "${ABI_ENCODER_V2}" = "1" && filename="${filename}_abiv2"
 
-    echo -ne "${filename}"
+  echo -ne "${filename}"
 }
 
-BOOST_TEST_ARGS="--color_output=no --show_progress=yes --logger=JUNIT,error,test_results/`get_logfile_basename`.xml ${BOOST_TEST_ARGS}"
-SOLTEST_ARGS="--evm-version=$EVM $SOLTEST_FLAGS"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  LIBEVMONE=/usr/local/lib/libevmone.dylib
+  LIBHERA=/usr/local/lib/libhera.dylib
+else
+  LIBEVMONE=/usr/lib/libevmone.so
+  LIBHERA=/usr/lib/libhera.so
+fi
+
+BOOST_TEST_ARGS="--color_output=no --show_progress=yes --logger=JUNIT,error,test_results/$(get_logfile_basename).xml ${BOOST_TEST_ARGS}"
+SOLTEST_ARGS="--evm-version=$EVM $SOLTEST_FLAGS --vm ${LIBEVMONE}"
+
+# run tests against hera ewasm evmc vm byzantium only if OPTIMIZE == 0
+# todo: enable ewasm tests also, if OPTIMIZE == 1
+test "${EVM}" = "byzantium" && test "${OPTIMIZE}" = "0" && SOLTEST_ARGS="${SOLTEST_ARGS} --vm ${LIBHERA}"
+
 test "${OPTIMIZE}" = "1" && SOLTEST_ARGS="${SOLTEST_ARGS} --optimize"
 test "${ABI_ENCODER_V2}" = "1" && SOLTEST_ARGS="${SOLTEST_ARGS} --abiencoderv2"
 
