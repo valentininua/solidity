@@ -188,6 +188,7 @@ namespace solidity::langutil
 	K(Struct, "struct", 0)                                             \
 	K(Throw, "throw", 0)                                               \
 	K(Type, "type", 0)                                                 \
+	K(Unchecked, "unchecked", 0)                                       \
 	K(Using, "using", 0)                                               \
 	K(View, "view", 0)                                                 \
 	K(Virtual, "virtual", 0)                                           \
@@ -263,7 +264,6 @@ namespace solidity::langutil
 	K(Try, "try", 0)                                                   \
 	K(Typedef, "typedef", 0)                                           \
 	K(TypeOf, "typeof", 0)                                             \
-	K(Unchecked, "unchecked", 0)                                       \
 	K(Var, "var", 0)                                                   \
 	\
 	/* Illegal token - not able to scan. */                            \
@@ -312,7 +312,7 @@ namespace TokenTraits
 
 	constexpr bool isEtherSubdenomination(Token op) { return op >= Token::SubWei && op <= Token::SubEther; }
 	constexpr bool isTimeSubdenomination(Token op) { return op == Token::SubSecond || op == Token::SubMinute || op == Token::SubHour || op == Token::SubDay || op == Token::SubWeek || op == Token::SubYear; }
-	constexpr bool isReservedKeyword(Token op) { return (Token::After <= op && op <= Token::Unchecked); }
+	constexpr bool isReservedKeyword(Token op) { return (Token::After <= op && op <= Token::Var); }
 
 	inline Token AssignmentToBinaryOp(Token op)
 	{
