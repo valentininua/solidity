@@ -603,6 +603,70 @@ string YulUtilFunctions::overflowCheckedIntSubFunction(IntegerType const& _type)
 	});
 }
 
+string YulUtilFunctions::overflowCheckedIntExpFunction(
+	IntegerType const& _type,
+	IntegerType const& _exponentType
+)
+{
+	solUnimplementedAssert(!_type.isSigned(), "");
+	solAssert(!_exponentType.isSigned(), "");
+	string functionName = "checked_exp_" + _type.identifier();
+	return m_functionCollector.createFunction(functionName, [&]() {
+		return
+			Whiskers(R"(
+			function <functionName>(base, exponent) -> power {
+				base := <cleanupFunction>(base)
+				exponent := <exponentCleanupFunction>(exponent)
+				// 0**0 == 1
+				if iszero(exponent) { power := 1 leave }
+				if or(
+					lt(base, 2),
+					eq(exponent, 1)
+				) { power := base leave }
+
+				power := 1
+				let max := <maxValue>
+
+				for { } gt(exponent, 1) {} {
+					// overflow check for base * base
+					<?signed>
+						// TODO after the first iteration, base is always positive.
+						// can we use this to optimize?
+						switch sgt(base, 0)
+						case 1 { if gt(base, div(max, base)) { revert(0, 0) }
+						case 0 { if slt(base, sdiv(max, base)) { revert(0, 0) }
+					<!signed>
+						if gt(base, div(max, base)) { revert(0, 0) }
+					</signed>
+					if and(exponent, 1) {
+						// no check needed here because base >= power
+						// TODO is this also true for the signed case?
+						power := mul(power, base)
+					}
+					base := mul(base, base)
+					exponent := <shr_1>(exponent)
+				}
+				<?signed>
+					 // here, base is always positive
+					 if and(sgt(power, 0), gt(power, div(max, base))) { revert(0, 0) }
+					 if and(slt(power, 0), slt(power, sdiv(<minValue>, base))) { revert(0, 0) }
+				<!signed>
+					if gt(power, div(max, base)) { revert(0, 0) }
+				</signed>
+				power := mul(power, base)
+			}
+			)")
+			("functionName", functionName)
+			("signed", _type.isSigned())
+			("maxValue", toCompactHexWithPrefix(u256(_type.maxValue())))
+			("minValue", toCompactHexWithPrefix(u256(_type.minValue())))
+			("cleanupFunction", cleanupFunction(_type))
+			("exponentCleanupFunction", cleanupFunction(_exponentType))
+			("shr_1", shiftRightFunction(1))
+			.render();
+	});
+}
+
 string YulUtilFunctions::extractByteArrayLengthFunction()
 {
 	string functionName = "extract_byte_array_length";
