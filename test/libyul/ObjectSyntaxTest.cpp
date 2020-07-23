@@ -19,6 +19,7 @@
 #include <libyul/AsmAnalysis.h>
 #include <libyul/AsmAnalysisInfo.h>
 #include <libyul/ObjectParser.h>
+#include <libyul/AssemblyStack.h>
 
 #include <liblangutil/EVMVersion.h>
 #include <liblangutil/Exceptions.h>
@@ -42,6 +43,7 @@ void ObjectSyntaxTest::parseAndAnalyze()
 	string const& name = m_sources.begin()->first;
 	string const& source = m_sources.begin()->second;
 
+#if 0
 	ErrorList errorList{};
 	ErrorReporter errorReporter{errorList};
 
@@ -53,6 +55,30 @@ void ObjectSyntaxTest::parseAndAnalyze()
 		yul::AsmAnalysisInfo analysisInfo;
 		yul::AsmAnalyzer(analysisInfo, errorReporter, *m_dialect).analyze(*parserResult->code);
 	}
+
+        AsmAnalyzer analyzer(
+                *_object.analysisInfo,
+                m_errorReporter,
+                languageToDialect(m_language, m_evmVersion),
+                {},
+                _object.dataNames()
+        );
+        bool success = analyzer.analyze(*_object.code);
+        for (auto& subNode: _object.subObjects)
+                if (auto subObject = dynamic_cast<Object*>(subNode.get()))
+                        if (!analyzeParsed(*subObject))
+                                success = false;
+#else
+	AssemblyStack asmStack(
+		solidity::test::CommonOptions::get().evmVersion(),
+		AssemblyStack::Language::StrictAssembly,
+		solidity::frontend::OptimiserSettings::none()
+	);
+	bool success = asmStack.parseAndAnalyze(name, source);
+	if (!success)
+		BOOST_THROW_EXCEPTION(runtime_error{"Unexpected failure."});
+	auto errorList = asmStack.errors();
+#endif
 
 	for (auto const& error: errorList)
 	{
