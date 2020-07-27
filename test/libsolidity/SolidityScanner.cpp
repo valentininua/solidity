@@ -770,6 +770,34 @@ BOOST_AUTO_TEST_CASE(irregular_line_breaks_in_strings)
 	}
 }
 
+BOOST_AUTO_TEST_CASE(solidity_keywords)
+{
+	// These are tokens which have a different meaning in Yul.
+	Scanner scanner(CharStream("return byte bool address var in true false leave", ""));
+	BOOST_CHECK_EQUAL(scanner.currentToken(), Token::Return);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Byte);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Bool);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Address);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Var);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::In);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::TrueLiteral);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::FalseLiteral);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Identifier);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::EOS);
+	scanner.reset(CharStream("return byte bool address var in true false leave", ""));
+	scanner.setScannerMode(ScannerKind::Yul);
+	BOOST_CHECK_EQUAL(scanner.currentToken(), Token::Return);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Byte);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Bool);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Address);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Var);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::In);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::TrueLiteral);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::FalseLiteral);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::Identifier);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::EOS);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 } // end namespaces
