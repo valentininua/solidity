@@ -56,18 +56,18 @@ void ObjectSyntaxTest::parseAndAnalyze()
 		yul::AsmAnalyzer(analysisInfo, errorReporter, *m_dialect).analyze(*parserResult->code);
 	}
 
-        AsmAnalyzer analyzer(
-                *_object.analysisInfo,
-                m_errorReporter,
-                languageToDialect(m_language, m_evmVersion),
-                {},
-                _object.dataNames()
-        );
-        bool success = analyzer.analyze(*_object.code);
-        for (auto& subNode: _object.subObjects)
-                if (auto subObject = dynamic_cast<Object*>(subNode.get()))
-                        if (!analyzeParsed(*subObject))
-                                success = false;
+	AsmAnalyzer analyzer(
+		*_object.analysisInfo,
+		m_errorReporter,
+		languageToDialect(m_language, m_evmVersion),
+		{},
+		_object.dataNames()
+	);
+	bool success = analyzer.analyze(*_object.code);
+	for (auto& subNode: _object.subObjects)
+		if (auto subObject = dynamic_cast<Object*>(subNode.get()))
+			if (!analyzeParsed(*subObject))
+				success = false;
 #else
 	AssemblyStack asmStack(
 		solidity::test::CommonOptions::get().evmVersion(),
