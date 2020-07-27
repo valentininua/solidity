@@ -38,6 +38,7 @@ Bugfixes:
  * Immutables: Fix internal compiler error when immutables are not assigned.
  * Inheritance: Disallow public state variables overwriting ``pure`` functions.
  * NatSpec: Constructors and functions have consistent userdoc output.
+ * SMTChecker: Fix internal error in array implicit conversion.
  * SMTChecker: Fix internal error when assigning to a 1-tuple.
  * SMTChecker: Fix internal error when tuples have extra effectless parenthesis.
  * State Mutability: Constant public state variables are considered ``pure`` functions.
