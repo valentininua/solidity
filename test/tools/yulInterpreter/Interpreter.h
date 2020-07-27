@@ -197,7 +197,10 @@ private:
 
 	/// Evaluates the given expression from right to left and
 	/// stores it in m_value.
-	void evaluateArgs(std::vector<Expression> const& _expr);
+	void evaluateArgs(
+		std::vector<Expression> const& _expr,
+		std::optional<std::vector<bool>> const& _literalArguments
+	);
 
 	InterpreterState& m_state;
 	Dialect const& m_dialect;
