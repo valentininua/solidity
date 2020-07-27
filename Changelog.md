@@ -7,6 +7,7 @@ Compiler Features:
 
 
 Bugfixes:
+ * SMTChecker: Fix internal error in BMC function inlining.
  * SMTChecker: Fix internal error on fixed bytes index access.
 
 
