@@ -21,7 +21,7 @@
 
 #include <libyul/optimiser/OptimizerUtilities.h>
 
-#include <libyul/backends/evm/EVMDialect.h>
+#include <libyul/Dialect.h>
 #include <libyul/AsmData.h>
 #include <libyul/AsmParser.h>
 
@@ -51,7 +51,5 @@ bool yul::isRestrictedIdentifier(Dialect const& _dialect, YulString const& _iden
 		return true;
 	if (_identifier.empty() || _dialect.builtin(_identifier))
 		return true;
-	if (dynamic_cast<EVMDialect const*>(&_dialect))
-		return Parser::instructions().count(_identifier.str());
 	return false;
 }
