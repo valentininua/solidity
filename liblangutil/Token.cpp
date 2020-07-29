@@ -139,6 +139,11 @@ int parseSize(string::const_iterator _begin, string::const_iterator _end)
 	}
 }
 
+bool isYulKeyword(string const& _literal)
+{
+	return _literal == "leave" || isYulToken(keywordByName(_literal));
+}
+
 Token keywordByName(string const& _name)
 {
 	// The following macros are used inside TOKEN_LIST and cause non-keyword tokens to be ignored
